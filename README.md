@@ -16,7 +16,7 @@ Android GreenDao使用总结（包括模型生成、增删改查、修改存储�
    在实际开发的过程中，数据库的结构可能会有所改变。而使用DevOpenHelper每次升级数据库时，表都会删除重建。因此，实际使用中需要建立类继承 DaoMaster.OpenHelper，实现 onUpgrade()方法。<br>
  通过查询资料，对未加密的数据库，推荐使用升级辅助库[GreenDaoUpgradeHelper](https://github.com/yuweiguocn/GreenDaoUpgradeHelper/blob/master/README_CH.md)。<br>该库通过 MigrationHelper在删表重建的过程中，使用临时表保存数据并还原。<br>
  MigrationHelper.migrate()，暂时只接收 SQLiteDatabase ，不接收 Database，且对加密的数据库是无效的。而实际应用中，由于数据的重要性，数据库往往是必须要加密的。
-<br>添加一个新类继承DaoMaster.OpenHelper，添加构造函数并重写onUpgrade和getEncryptedWritableDb方法，代码如下：<br>
+<br>解决方案如下：添加一个新类继承DaoMaster.OpenHelper，添加构造函数并重写onUpgrade和getEncryptedWritableDb方法。同时修改MigrationHelper为EncryptedMigrationHelper。MyEncryptedSQLiteOpenHelper代码如下：<br>
  ```Java
 private static class MyEncryptedSQLiteOpenHelper extends DaoMaster.OpenHelper {
 
